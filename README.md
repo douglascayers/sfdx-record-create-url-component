@@ -1,5 +1,5 @@
 Inspired by [Brian Kwong](https://twitter.com/Kwongerific)'s [blog post](https://thewizardnews.com/2018/08/02/url-hack-functionality-lightning/)
-on "URL Hacking" with supported features in Lightning Experience.
+on "URL Hacking" with supported features in Lightning Experience. 
 
 This project's purpose is to determine a way to provide the "URL Hacking" in Lightning Experience
 with supported features in Lightning Experience but without the need of a Flow so that we can have
