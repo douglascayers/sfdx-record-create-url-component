@@ -2,9 +2,9 @@
     handleShowCreateForm: function( component ) {
 
         /*
-		 * Supported URL parameters:
-		 *   objectName - API name of a standard or custom object (e.g. Account or Project__c)
-		 *   recordTypeId - which record type to use, if not specified then the user's default record type is assumed
+         * Supported URL parameters:
+         *   objectName - API name of a standard or custom object (e.g. Account or Project__c)
+         *   recordTypeId - which record type to use, if not specified then the user's default record type is assumed
          *
          * All other key=value URL parameters are
          * assumed as default field values for the record form.
@@ -13,14 +13,14 @@
          * For example, "phone" and "PHONE" will not pre-populate the standard Contact "Phone" field.
          *
          * Example Custom Button URL:
-         * 		"/lightning/cmp/c__URL_CreateRecordCmp?objectName=Contact&FirstName=Astro&LastName=Nomical&AccountId={!Account.Id}"
+         *     "/lightning/cmp/c__URL_CreateRecordCmp?objectName=Contact&FirstName=Astro&LastName=Nomical&AccountId={!Account.Id}"
          */
 
         var helper = this;
 
         var pageRef = component.get( 'v.pageReference' );
 
-		// Retrieve specific parameters from the URL.
+        // Retrieve specific parameters from the URL.
         // For case-insensitivity, the properties are lowercase.
         var urlParamMap = {
             'objectname' : '',
