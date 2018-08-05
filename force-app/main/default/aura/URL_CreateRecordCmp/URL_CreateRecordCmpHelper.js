@@ -24,10 +24,7 @@
         // For case-insensitivity, the properties are lowercase.
         var urlParamMap = {
             'objectname' : '',
-            'recordtypeid' : '',
-            'returl' : '',
-            'saveurl' : '',
-            'cancelurl' : ''
+            'recordtypeid' : ''
         };
 
         for ( var key in pageRef.state ) {
@@ -48,15 +45,7 @@
             console.log( 'fieldDescribeMap', fieldDescribeMap );
 
             var eventParamMap = {
-                'defaultFieldValues' : {},
-                'panelOnDestroyCallback' : function( event ) {
-                    console.log( 'panelOnDestroyCallback', event );
-                    // helper.navigateToUrl( urlParamMap.cancelurl || urlParamMap.returl );
-                },
-                'panelOnCreateCallback' : function( event ) {
-                    console.log( 'panelOnCreateCallback', event );
-                    // helper.navigateToUrl( urlParamMap.saveurl || urlParamMap.returl );
-                }
+                'defaultFieldValues' : {}
             };
 
             if ( !$A.util.isEmpty( urlParamMap.objectname ) ) {
@@ -98,9 +87,7 @@
         console.log( 'navigating to url', url );
 
         if ( !$A.util.isEmpty( url ) ) {
-            $A.get( 'e.force:navigateToURL' ).setParams({
-                'url': url
-            }).fire();
+            $A.get( 'e.force:navigateToURL' ).setParams({ 'url': url }).fire();
         }
 
     },
