@@ -23,8 +23,9 @@
         // Retrieve specific parameters from the URL.
         // For case-insensitivity, the properties are lowercase.
         var urlParamMap = {
-            'objectname' : '',
-            'recordtypeid' : ''
+            'objectname' : '',      // object whose create form to display
+            'recordtypeid' : '',    // record type for new record (optional)
+            'recordid' : ''         // id of record where button was clicked
         };
 
         for ( var key in pageRef.state ) {
@@ -35,6 +36,15 @@
         }
 
         console.log( 'urlParamMap', urlParamMap );
+
+        if ( !$A.util.isEmpty( urlParamMap.recordid ) ) {
+            // workaround for not being able to customize the cancel
+            // behavior of the force:createRecord event. instead of
+            // the user seeing a blank page, instead load in the background
+            // the very record the user is viewing so when they click cancel
+            // they are still on the same record.
+            helper.navigateToUrl( '/' + urlParamMap.recordid );
+        }
 
         helper.enqueueAction( component, 'c.getFieldDescribeMap', {
             'objectName' : urlParamMap.objectname
