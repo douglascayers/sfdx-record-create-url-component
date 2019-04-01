@@ -1,7 +1,10 @@
 {
-    "orgName": "Company",
-    "edition": "Developer",
-    "orgPreferences" : {
-        "enabled": ["S1DesktopEnabled"]
+  "orgName" : "Company",
+  "edition" : "Developer",
+  "settings" : {
+    "orgPreferenceSettings" : {
+      "s1DesktopEnabled" : true,
+      "s1EncryptedStoragePref2" : false
     }
+  }
 }

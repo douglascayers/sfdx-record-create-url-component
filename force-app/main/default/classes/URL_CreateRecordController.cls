@@ -14,7 +14,7 @@ public class URL_CreateRecordController {
      * @param objectName
      *      API name of the object whose field describe to return
      */
-    @AuraEnabled
+    @AuraEnabled( cacheable = true )
     public static Map<String, Object> getFieldDescribeMap( String objectName ) {
 
         Map<String, Object> fieldDescribeMap = new Map<String, Object>();
