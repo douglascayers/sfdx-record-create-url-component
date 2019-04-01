@@ -16,20 +16,20 @@
          *     "/lightning/cmp/c__URL_CreateRecordCmp?objectName=Contact&FirstName=Astro&LastName=Nomical&AccountId={!Account.Id}"
          */
 
-        var helper = this;
+        let helper = this;
 
-        var pageRef = component.get( 'v.pageReference' );
+        let pageRef = component.get( 'v.pageReference' );
 
         // Retrieve specific parameters from the URL.
         // For case-insensitivity, the properties are lowercase.
-        var urlParamMap = {
+        let urlParamMap = {
             'objectname' : '',      // object whose create form to display
             'recordtypeid' : '',    // record type for new record (optional)
             'recordid' : ''         // id of record where button was clicked
         };
 
-        for ( var key in pageRef.state ) {
-            var lowerKey = key.toLowerCase();
+        for ( let key in pageRef.state ) {
+            let lowerKey = key.toLowerCase();
             if ( urlParamMap.hasOwnProperty( lowerKey ) ) {
                 urlParamMap[lowerKey] = pageRef.state[key];
             }
@@ -37,24 +37,45 @@
 
         console.log( 'urlParamMap', urlParamMap );
 
-        if ( !$A.util.isEmpty( urlParamMap.recordid ) ) {
-            // workaround for not being able to customize the cancel
-            // behavior of the force:createRecord event. instead of
-            // the user seeing a blank page, instead load in the background
-            // the very record the user is viewing so when they click cancel
-            // they are still on the same record.
-            helper.navigateToUrl( '/' + urlParamMap.recordid );
-        }
+        Promise.resolve()
+            .then( function() {
+                if ( !$A.util.isEmpty( urlParamMap.recordid ) ) {
+                    // workaround for not being able to customize the cancel
+                    // behavior of the force:createRecord event. instead of
+                    // the user seeing a blank page, instead load in the background
+                    // the very record the user is viewing so when they click cancel
+                    // they are still on the same record.
+                    helper.navigateToUrl( '/' + urlParamMap.recordid );
+                    // give the page some time to load the new url
+                    // otherwise we end up firing the show create form
+                    // event too early and the page navigation happens
+                    // afterward, causing the quick action modal to disappear.
+                    return new Promise( function( resolve, reject ) {
+                        setTimeout( resolve, 1000 );
+                    });
+                }
+            })
+            .then( function() {
+                helper.showCreateForm( component, urlParamMap, pageRef );
+            });
+
+    },
+
+    // -----------------------------------------------------------------
+
+    showCreateForm: function( component, urlParamMap, pageRef ) {
+
+        let helper = this;
 
         helper.enqueueAction( component, 'c.getFieldDescribeMap', {
+
             'objectName' : urlParamMap.objectname
-        }, {
-            'storable' : true
+
         }).then( $A.getCallback( function( fieldDescribeMap ) {
 
             console.log( 'fieldDescribeMap', fieldDescribeMap );
 
-            var eventParamMap = {
+            let eventParamMap = {
                 'defaultFieldValues' : {}
             };
 
@@ -68,9 +89,10 @@
 
             // ensure only fields the current user has permission to create are set
             // otherwise upon attempt to save will get component error
-            for ( var fieldName in pageRef.state ) {
+            for ( let fieldName in pageRef.state ) {
                 if ( fieldDescribeMap.hasOwnProperty( fieldName ) && fieldDescribeMap[fieldName].createable ) {
-                    eventParamMap.defaultFieldValues[fieldName] = pageRef.state[fieldName];
+                    // avoid setting lookup fields to undefined, get Error ID: 1429293140-211986 (-590823013), assign to null instead
+                    eventParamMap.defaultFieldValues[fieldName] = pageRef.state[fieldName] || null;
                 }
             }
 
@@ -90,8 +112,6 @@
 
     },
 
-    // -----------------------------------------------------------------
-
     navigateToUrl: function( url ) {
 
         console.log( 'navigating to url', url );
@@ -104,13 +124,13 @@
 
     enqueueAction: function( component, actionName, params, options ) {
 
-        var helper = this;
+        let helper = this;
 
-        var p = new Promise( function( resolve, reject ) {
+        return new Promise( function( resolve, reject ) {
 
             component.set( 'v.showSpinner', true );
 
-            var action = component.get( actionName );
+            let action = component.get( actionName );
 
             if ( params ) {
                 action.setParams( params );
@@ -143,14 +163,12 @@
             $A.enqueueAction( action );
 
         });
-
-        return p;
     },
 
     logActionErrors : function( errors ) {
         if ( errors ) {
             if ( errors.length > 0 ) {
-                for ( var i = 0; i < errors.length; i++ ) {
+                for ( let i = 0; i < errors.length; i++ ) {
                     console.error( 'Error: ' + errors[i].message );
                 }
             } else {
