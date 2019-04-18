@@ -6,7 +6,7 @@
  * License: BSD 3-Clause License
  */
 -->
-<aura:component controller="URL_CreateRecordController" implements="lightning:isUrlAddressable,lightning:hasPageReference">
+<aura:component controller="URL_CreateRecordController" implements="lightning:isUrlAddressable">
 
     <aura:attribute name="showSpinner" type="Boolean" default="false"/>
     <aura:handler name="change" value="{!v.pageReference}" action="{!c.onPageReferenceChange}"/>
