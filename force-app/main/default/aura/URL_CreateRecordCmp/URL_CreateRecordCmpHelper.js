@@ -25,7 +25,8 @@
         let urlParamMap = {
             'objectname' : '',      // object whose create form to display
             'recordtypeid' : '',    // record type for new record (optional)
-            'returnurl' : ''         // id of record where button was clicked
+            'recordid' : '',        // id of record where button was clicked
+            'actionurl' : ''        // location where hacking started
         };
 
         for ( let key in pageRef.state ) {
@@ -39,14 +40,22 @@
 
         Promise.resolve()
             .then( function() {
-                if ( !$A.util.isEmpty( urlParamMap.returnurl ) ) {
-                    // workaround for not being able to customize the cancel
-                    // behavior of the force:createRecord event. instead of
-                    // the user seeing a blank page, instead load in the background
-                    // the very record the user is viewing so when they click cancel
-                    // they are still on the same record.
-                    //helper.navigateToUrl( '/' + urlParamMap.recordid );
-                    helper.navigateToUrl( urlParamMap.returnurl );
+                // workaround for not being able to customize the cancel
+                // behavior of the force:createRecord event. instead of
+                // the user seeing a blank page, instead load in the background
+                // the very record the user is viewing so when they click cancel
+                // they are still on the same record.
+                let targetUrl;
+                if ( !$A.util.isEmpty( urlParamMap.recordid ) ) {
+                    targetUrl = '/' + urlParamMap.recordid;
+                }
+                else if ( !$A.util.isEmpty( urlParamMap.actionurl ) ) {
+                    targetUrl = urlParamMap.actionurl;
+                }
+
+                if ( !$A.util.isEmpty( targetUrl ) ) {
+                    
+                    helper.navigateToUrl( targetUrl );
                     // give the page some time to load the new url
                     // otherwise we end up firing the show create form
                     // event too early and the page navigation happens
