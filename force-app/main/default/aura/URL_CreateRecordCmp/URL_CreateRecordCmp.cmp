@@ -9,7 +9,7 @@
 <aura:component controller="URL_CreateRecordController" implements="lightning:isUrlAddressable">
 
     <aura:attribute name="showSpinner" type="Boolean" default="false"/>
-
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.onPageReferenceChange}"/>
     <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
 
     <span class="{!v.showSpinner ? 'slds-show' : 'slds-hide'}">
